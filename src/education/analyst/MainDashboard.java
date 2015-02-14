@@ -7,7 +7,11 @@ package education.analyst;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -77,6 +81,11 @@ public class MainDashboard extends javax.swing.JFrame {
         });
 
         jButton4.setText("Reset");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
         jFrame1.getContentPane().setLayout(jFrame1Layout);
@@ -241,10 +250,33 @@ public class MainDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        jFrame1.setVisible(false);
-        this.setVisible(true);
+        try {
+            // TODO add your handling code here:
+            String t_id = jTextField1.getText();
+            String t_name = jTextField2.getText();
+            Statement st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT TEACHER_NAME FROM TEACHER WHERE TEACHER_ID = '"+t_id+"'");
+            rs.next();
+            if(rs.getString(1).equalsIgnoreCase(t_name)){
+                jTextField3.setText("");
+                jFrame1.setVisible(false);
+                this.setVisible(true);
+            }
+            else{
+                jTextField3.setText("Invalid TEACHER ID OR NAME");
+            }
+        } catch (SQLException ex) {
+            jTextField3.setText("Invalid TEACHER ID OR NAME");
+            Logger.getLogger(MainDashboard.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -287,7 +319,7 @@ public class MainDashboard extends javax.swing.JFrame {
                     new MainDashboard();
              }
              });
-            con.close();
+            //con.close();
         }
         catch(Exception e){
             e.printStackTrace();
